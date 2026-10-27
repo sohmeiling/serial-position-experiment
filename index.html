@@ -12,7 +12,10 @@
   <!-- Screen 1: Start -->
   <div id="start-screen">
     <h2>Serial Position Experiment</h2>
-    <p>You will see a sequence of 15 words presented one by one. Try to memorize as many as you can.</p>
+    <p>Choose 1–5 trials. Each trial presents a different list of 15 words, one word every 2 seconds. Recall the words after each list. Your combined results appear after the final trial.
+    </p>
+    <p><label for="trial-count">Number of trials:</label>
+      <select id="trial-count"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></p>
     <button class="btn" onclick="startExperiment()">Start Test</button>
     <p><a href="serial-recall-download.html" download>Download the experiment for offline use</a></p>
     <p>Save the HTML file, then open it in your browser to take the experiment offline.</p>
@@ -20,27 +23,35 @@
 
   <!-- Screen 2: Word Presentation -->
   <div id="display-screen" class="hidden">
+    <p id="trial-progress"></p>
     <div id="word-box" class="word-display"></div>
   </div>
 
   <!-- Screen 3: Recall Entry -->
   <div id="recall-screen" class="hidden">
     <h2>Recall the Words</h2>
+    <p id="recall-progress"></p>
     <p>Type all the words you can remember, separated by commas, spaces, or line breaks. The order does not matter.</p>
     <div class="input-area">
       <textarea id="recall-input" placeholder="Enter words here..."></textarea>
       <br>
-      <button class="btn" onclick="submitRecall()">View Results</button>
+      <button id="submit-recall" class="btn" onclick="submitRecall()">View Results</button>
     </div>
+  </div>
+
+  <div id="between-screen" class="hidden">
+    <h2>Trial Complete</h2>
+    <p id="between-progress" role="status"></p>
+    <button class="btn" onclick="startTrial()">Next Trial</button>
   </div>
 
   <!-- Screen 4: Results Graph & Explanation -->
   <div id="results-screen" class="hidden">
     <h2>Your Results</h2>
-    <p>The line connects your result at each list position: 1 = recalled, 0 = not recalled.</p>
+    <p>The graph shows how many trials you recalled the word at each list position. Words differ between trials; counts are combined by position.</p>
     
     <p id="score-summary" role="status"></p>
-    <p>Vertical scale: missed (0) to recalled (1). Horizontal scale: original list position.</p>
+    <p id="scale-description"></p>
     <div class="graph-container">
       <div id="chart" class="chart"></div>
       <div class="axis-labels">
@@ -50,7 +61,8 @@
       </div>
     </div>
 
-    <details style="margin-top:20px;text-align:left"><summary>View word-by-word results</summary><ol id="result-list"></ol></details>
+    <details style="margin-top:20px;text-align:left"><summary>View counts by position</summary><ol id="result-list"></ol></details>
+    <div id="trial-details" style="margin-top:20px;text-align:left"></div>
     <div class="explanation">
       <strong>Understanding Your Graph:</strong>
       <ul>
